@@ -140,12 +140,14 @@ node_identifier = str(uuid4()).replace('-', '')
 blockchain = Blockchain()
 
 
-@app.route('/mine', methods=['GET'])
+@app.route('/mine', methods=['POST'])
 def mine():
-    # We run the proof of work algorithm to get the next proof...
-    last_block = blockchain.chain[-1]
-    last_proof = last_block['proof']
-    proof = blockchain.proof_of_work(last_proof)
+    values = request.get_json()
+    
+    # Check that the required fields are in the POST'ed data
+    required = ['valid_proof']
+    if not all(k in values for k in required):
+        return 'Missing Values', 400
 
     # We must receive a reward for finding the proof.
     # The sender is "0" to signify that this node has mine a new coin
@@ -156,7 +158,8 @@ def mine():
     )
 
     # Forge the new BLock by adding it to the chain
-    previous_hash = blockchain.hash(last_block)
+    previous_hash = blockchain.hash(blockchain.chain[-1])
+    proof = values['valid_proof']
     block = blockchain.new_block(proof, previous_hash)
 
     response = {
