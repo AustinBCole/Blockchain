@@ -13,6 +13,7 @@ class Blockchain(object):
         self.chain = []
         self.current_transactions = []
         self.nodes = set()
+        self.proofs = set()
 
         self.new_block(previous_hash=1, proof=99)
 
@@ -76,30 +77,6 @@ class Blockchain(object):
     def last_block(self):
         return self.chain[-1]
 
-    def proof_of_work(self, last_proof):
-        """
-        Simple Proof of Work Algorithm
-        - Find a number p' such that hash(pp') contains 4 leading
-        zeroes, where p is the previous p'
-        - p is the previous proof, and p' is the new proof
-        """
-
-        proof = 0
-        while self.valid_proof(last_proof, proof) is False:
-            proof += 1
-
-        return proof
-
-    @staticmethod
-    def valid_proof(last_proof, proof):
-        """
-        Validates the Proof:  Does hash(last_proof, proof) contain 4
-        leading zeroes?
-        """
-        guess = f'{last_proof}{proof}'.encode()
-        guess_hash = hashlib.sha256(guess).hexdigest()
-        return guess_hash[:4] == "0000"
-
     def valid_chain(self, chain):
         """
         Determine if a given blockchain is valid
@@ -161,13 +138,18 @@ def mine():
     proof = values['valid_proof']
     block = blockchain.new_block(proof, previous_hash)
 
-    response = {
-        'message': "New Block Forged",
-        'index': block['index'],
-        'transactions': block['transactions'],
-        'proof': block['proof'],
-        'previous_hash': block['previous_hash'],
-    }
+    if proof not in blockchain.proofs:
+        blockchain.proofs.add(proof)
+        print(blockchain.proofs)
+        response = {
+            'message': "New Block Forged",
+            'index': block['index'],
+            'transactions': block['transactions'],
+            'proof': block['proof'],
+            'previous_hash': block['previous_hash'],
+        }
+    else:
+        response = {'message': "You have sent a duplicate proof."}
     return jsonify(response), 200
 
 
