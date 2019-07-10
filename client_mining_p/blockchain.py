@@ -143,8 +143,6 @@ blockchain = Blockchain()
 @app.route('/mine', methods=['POST'])
 def mine():
     values = request.get_json()
-    print("Here are the values:\n\n\n\n\n\n\n\n\n\n")
-    print(values)
     
     required = ['valid_proof']
     if not all(k in values for k in required):

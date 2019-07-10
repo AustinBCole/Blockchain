@@ -46,7 +46,11 @@ if __name__ == '__main__':
                 'valid_proof': new_proof
                 }
         request = requests.post(url = post_url, json = data)
-        print(request.text)
+        data = request.json()
         # TODO: If the server responds with 'New Block Forged'
+        if data['message'] == "New Block Forged":
         # add 1 to the number of coins mined and print it.  Otherwise,
+            coins_mined += 1
+            print(f"\n\n\n\n\nYou have {coins_mined} coins!\n\n\n\n\n")
         # print the message from the server.
+        print(data['message'])
