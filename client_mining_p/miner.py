@@ -3,9 +3,25 @@ import requests
 
 import sys
 
-
+url = "http://localhost:5000"
 # TODO: Implement functionality to search for a proof 
+def proof_of_work():
+    
+    # Use GET requet to get proof of last block from the server
+    r = requests.get(url = url)
+    data = r.json()
+    last_proof = data["last_proof"]
+    
+    proof = 0
+    while self.valid_proof(last_proof, proof)is false:
+        proof += 1
+    return proof
 
+def valid_proof(last_proof, proof):
+
+    guess = f'{last_proof}{proof}'.encode()
+    guess_hash = hashlib.sha256(guess).hexdigest()
+    return guess_hash[:6] == "000000"
 
 if __name__ == '__main__':
     # What node are we interacting with?

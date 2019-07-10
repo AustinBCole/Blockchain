@@ -143,7 +143,7 @@ blockchain = Blockchain()
 @app.route('/mine', methods=['GET'])
 def mine():
     # We run the proof of work algorithm to get the next proof...
-    last_block = blockchain.last_block
+    last_block = blockchain.chain[-1]
     last_proof = last_block['proof']
     proof = blockchain.proof_of_work(last_proof)
 
