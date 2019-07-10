@@ -14,7 +14,7 @@ class Blockchain(object):
         self.current_transactions = []
         self.nodes = set()
 
-        self.new_block(previous_hash=1, proof=100)
+        self.new_block(previous_hash=1, proof=99)
 
     def new_block(self, proof, previous_hash=None):
         """
@@ -143,8 +143,9 @@ blockchain = Blockchain()
 @app.route('/mine', methods=['POST'])
 def mine():
     values = request.get_json()
+    print("Here are the values:\n\n\n\n\n\n\n\n\n\n")
+    print(values)
     
-    # Check that the required fields are in the POST'ed data
     required = ['valid_proof']
     if not all(k in values for k in required):
         return 'Missing Values', 400
@@ -200,7 +201,7 @@ def full_chain():
 
 
 @app.route('/lastproof', methods=['GET'])
-def last_post():
+def last_proof():
     response = {
         'last_proof': blockchain.chain[-1]["proof"],
 }
