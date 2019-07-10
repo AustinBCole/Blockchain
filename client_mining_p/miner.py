@@ -1,5 +1,6 @@
 import hashlib
 import requests
+from threading import Timer
 
 import sys
 
@@ -7,6 +8,8 @@ url = "http://localhost:5000"
 # TODO: Implement functionality to search for a proof 
 def proof_of_work():
     
+    print("\nWe have started the proof of work process.\n")
+    print(time.time())
     # Use GET requet to get proof of last block from the server
     r = requests.get(url = url)
     data = r.json()
@@ -15,6 +18,8 @@ def proof_of_work():
     proof = 0
     while self.valid_proof(last_proof, proof)is false:
         proof += 1
+    print("\nThe proof of work process is over\n")
+    print(time.time())
     return proof
 
 def valid_proof(last_proof, proof):
