@@ -1,7 +1,8 @@
 import hashlib
 import requests
-
+import uuid
 import sys
+import os
 
 
 def proof_of_work(last_proof):
@@ -31,6 +32,16 @@ def valid_proof(last_proof, proof):
     return guess_hash[:6] == "000000"
 
 
+def load_id():
+    if os.path.isfile('my_id'):
+        file = open('my_id', 'r')
+        return file.read()
+    id_file = open('my_id', 'w')
+    new_id = uuid.uuid4().hex
+    id_file.write(new_id)
+    return new_id
+
+
 if __name__ == '__main__':
     # What node are we interacting with?
     if len(sys.argv) > 1:
@@ -45,8 +56,10 @@ if __name__ == '__main__':
         r = requests.get(url=node + "/last_proof")
         data = r.json()
         new_proof = proof_of_work(data.get('proof'))
+        id = load_id()
+        print(id)
 
-        post_data = {"proof": new_proof}
+        post_data = {"proof": new_proof, "id": id}
 
         r = requests.post(url=node + "/mine", json=post_data)
         data = r.json()
